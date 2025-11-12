@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>縦型電光掲示板風広告（画像のみ・5秒間隔・大サイズ）</title>
+    
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        /* 掲示板全体の外枠（縦型、画像を1枚だけ見せる） */
+        .billboard-container {
+            /* 🔥 幅を300pxから500pxに変更 */
+            width: 500px;
+            /* 🔥 高さを600pxから800pxに変更 */
+            height: 800px; 
+            overflow: hidden; 
+            border: 5px solid #333;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            background-color: #000;
+            position: relative;
+        }
+
+        /* 広告コンテンツのラッパー（アニメーション対象） */
+        .ad-content-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        /* 広告コンテンツの個々のアイテム（画像1枚分） */
+        .ad-item {
+            width: 100%;
+            /* 🔥 高さをコンテナに合わせて800pxに変更 */
+            height: 800px; 
+            flex-shrink: 0; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 画像そのもののスタイル */
+        .ad-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* 画像全体が見えるように調整 */
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="billboard-container">
+        <div class="ad-content-wrapper" id="ad-wrapper">
+            
+            <div class="ad-item">
+                <img src="./images/ad1.png" alt="広告画像 1">
+            </div>
+            
+            <div class="ad-item">
+                <img src="./images/ad2.png" alt="広告画像 2">
+            </div>
+            
+            <div class="ad-item">
+                <img src="./images/ad3.png" alt="広告画像 3">
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const wrapper = document.getElementById('ad-wrapper');
+            const container = document.querySelector('.billboard-container');
+            const items = document.querySelectorAll('.ad-item');
+            
+            // 🔥 縦型コンテナの高さ (800px) を取得
+            const itemHeight = container.offsetHeight; 
+            
+            // 全アイテム数
+            const totalItems = items.length;
+            
+            // 現在表示中のインデックス
+            let currentIndex = 0;
+            
+            // 切り替え間隔を5秒 (5000ミリ秒) 
+            const intervalTime = 5000; 
+
+            function updateSlide() {
+                // 1. 次のインデックスを計算 (ループ)
+                currentIndex = (currentIndex + 1) % totalItems;
+                
+                // 2. スクロール位置を計算し、ラッパーを移動
+                // itemHeight (800px) を使って移動量が自動調整される
+                const offset = -currentIndex * itemHeight;
+                wrapper.style.transform = `translateY(${offset}px)`;
+            }
+
+            // 5秒ごとにスライドを更新
+            setInterval(updateSlide, intervalTime);
+        });
+    </script>
+</body>
+</html>
